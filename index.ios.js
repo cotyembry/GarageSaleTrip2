@@ -25,9 +25,11 @@ import {
   withRouter,
 } from 'react-router-native';
 
+
 import AddPhotos from './AddPhotos.js';
 import CameraRollExample from './CameraRollExample.js';
 
+var blah = 23;
 
 
  

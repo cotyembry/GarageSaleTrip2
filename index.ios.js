@@ -5,15 +5,16 @@
 import React from 'react';
 import {
   AppRegistry,
-  ScrollView,
-  StyleSheet,
-  View,
-  Text,
   CameraRoll,
+  Dimensions,
   Image,
+  ScrollView,
   Slider,
+  StyleSheet,
   Switch,
-  TouchableOpacity
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {
   Header,
@@ -25,8 +26,12 @@ import {
   withRouter,
 } from 'react-router-native';
 
-import AddPhotos from './AddPhotos.js';
+import Button from 'react-native-button';
+
+import AddAndEditPhotos from './AddAndEditPhotos.js';
 import CameraRollExample from './CameraRollExample.js';
+import {PhotosList} from './js/components/PhotosList.js';
+import CustomModal from './js/components/CustomModal.js';
 
  
 const Master = (props) => (
@@ -79,16 +84,7 @@ const DetailHeader = withRouter((props) => {
 const Detail = (props) => (
   <View style={[styles.component, { backgroundColor: '#FFFFFF' }]}>{props.children}</View>
 );
- 
-// const routes = (
-//   /* Address Bar can be toggled on or off by setting the addressBar prop */
-//   <Router history={nativeHistory} addressBar>
-//     <StackRoute path="master" component={Master}>
-//       <Route path="/" component={Home} overlayComponent={HomeHeader} />
-//       <Route path="/detail/:themeColor" component={Detail} overlayComponent={DetailHeader} />
-//     </StackRoute>
-//   </Router>
-// );
+
 
 const Root = (props) => (
   <View style={styles.component}>
@@ -96,22 +92,27 @@ const Root = (props) => (
   </View>
 )
 
+
 const Home = (props) => {
   const DetailCard = ({ route, backgroundColor }) => (
     <Link to={'/' + route} style={styles.detailCard}>
       <View style={{ flex: 1, backgroundColor }} />
     </Link>
   );
-
-  // const AddPhotos = () => (
-  //   <Link to={'/addphotos'} style={styles.detailCard}>
-  //     <View style={{ flex: 1 }} />
-  //   </Link>
-  // )
+  const TakePhotos = () => (
+    <Link to={'/takephotos'} style={styles.TakePhoto}>
+      <View>
+        <Text>Tap to take a new photo</Text>
+      </View>
+    </Link>    
+  )
 
   return (
-    <ScrollView>
-      <DetailCard route="addphotos" backgroundColor="#EF4E5E" />
+    <ScrollView style={styles.ScrollView}>
+      <View style={styles.firstRow}>
+        <CustomModal />
+      </View>
+      <TakePhotos />
       <DetailCard route="" backgroundColor="#9498CA" />
       <DetailCard route="" backgroundColor="#AFCCB3" />
       <DetailCard route="" backgroundColor="#F0D73D" />
@@ -130,7 +131,8 @@ class Routes2 extends React.Component {
       <Router history={nativeHistory} addressBar>
         <StackRoute path="root" component={Root}>
           <Route path="/" component={Home} overlayComponent={HomeHeader} />
-          <Route path="/addphotos" component={AddPhotos} />
+          <Route path="/takephotos" component={AddAndEditPhotos} />
+          {/*<Route path="/addphotos" component={AddAndEditPhotos} />*/}
           {/*<Route path="/settings" component={Settings} overlayComponent={SettingsHeader} />
           <Route path="/camera" component={camera} overlayComponent={CameraHeader} />*/}
         </StackRoute>
@@ -154,6 +156,10 @@ AppRegistry.registerComponent('GarageSaleTrip2', () => Routes2);
 // });
  
 const styles = StyleSheet.create({
+  Button: {
+    fontSize: 20,
+    color: 'green'
+  },
   component: {
     backgroundColor: '#FFFFFF',
     flex: 1,
@@ -162,14 +168,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   detailCard: {
-    height: 100,
-    margin: 20,
-    width: 200,
-    borderWidth: 2,
-    borderBottomColor: 'orange'
+    width: Dimensions.get('window').width,
+    height: 100
+  },
+  firstRow: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 75,
+    justifyContent: 'center'
   },
   row: {
     flexDirection: 'row',
@@ -184,5 +193,16 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
+  },
+  ScrollView: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  TakePhoto: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'gray',
+    width: Dimensions.get('window').width,
+    height: 100
   }
 });

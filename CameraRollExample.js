@@ -16,12 +16,15 @@ const {
   View,
   TouchableOpacity
 } = ReactNative;
+import {
+  Link
+} from 'react-router-native';
 
 const invariant = require('invariant');
 
-const CameraRollView = require('./CameraRollView');
+const CameraRollView = require('./js/components/CameraRollView');
 
-const AssetScaledImageExampleView = require('./AssetScaledImageExample');
+const AssetScaledImageExampleView = require('./js/components/AssetScaledImageExample');
 
 class CameraRollExample extends React.Component {
   state = {
@@ -32,24 +35,26 @@ class CameraRollExample extends React.Component {
   _cameraRollView: ?CameraRollView;
   render() {
     return (
-      <View>
-        <Switch
-          onValueChange={this._onSwitchChange}
-          value={this.state.bigImages}
-        />
-        <Text>{(this.state.bigImages ? 'Big' : 'Small') + ' Images'}</Text>
-        <Slider
-          value={this.state.sliderValue}
-          onValueChange={this._onSliderChange}
-        />
-        <Text>{'Group Type: ' + this.state.groupTypes}</Text>
-        <CameraRollView
-          ref={(ref) => { this._cameraRollView = ref; }}
-          batchSize={20}
-          groupTypes={this.state.groupTypes}
-          renderImage={this._renderImage}
-        />
-      </View>
+      <Link to={'/addphotos'}>
+        <View>
+          <Switch
+            onValueChange={this._onSwitchChange}
+            value={this.state.bigImages}
+          />
+          <Text>{(this.state.bigImages ? 'Big' : 'Small') + ' Images'}</Text>
+          <Slider
+            value={this.state.sliderValue}
+            onValueChange={this._onSliderChange}
+          />
+          <Text>{'Group Type: ' + this.state.groupTypes}</Text>
+          <CameraRollView
+            ref={(ref) => { this._cameraRollView = ref; }}
+            batchSize={20}
+            groupTypes={this.state.groupTypes}
+            renderImage={this._renderImage}
+          />
+        </View>
+      </Link>
     );
   }
 

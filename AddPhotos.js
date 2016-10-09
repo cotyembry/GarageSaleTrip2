@@ -13,190 +13,90 @@ import {
   Text,
   StyleSheet,
   TouchableHighlight,
-  CameraRoll
+  CameraRoll,
+  Dimensions
 } from 'react-native';
 import {
   Link
 } from 'react-router-native';
 
+import Button from 'react-native-button';
 
-  // const AddPhotos = () => (
-  //   <Link to={'/addphotos'} style={styles.detailCard}>
-  //     <View style={{ flex: 1 }} />
-  //   </Link>
-  // )
+import CameraRollView from './js/components/CameraRollView.js';
+import {PhotosList, rerenderHelper} from './js/components/PhotosList.js';
+// import sayHello from './js/components/PhotosList.js';
+// import PhotoListExposure from './js/components/PhotosList.js';
+
+
 
 var AddPhotos = React.createClass({
   getInitialState: function() {
     return {
       assets: [],
-      text: 'default'
+      text: 'default',
+      showListView: true
     }
   },
   loadImages: function() {
     this.setState({ text: "new text value!!!"})
 
-      const fetchParams = {
-        first: 25
+    var fetchParams: Object = {
+      first: this.props.batchSize,
+      groupTypes: this.props.groupTypes,
+      assetType: this.props.assetType,
     };
-//     var images = CameraRoll.getPhotos(fetchParams);
+    CameraRoll.getPhotos(fetchParams)
+      .then((data) => this._appendAssets(data), (e) => logError(e));
+  },
+  handlePress() {
+    rerenderHelper();
+    // if(this.state.showListView === false) {
 
+    // }
 
-    CameraRoll.getPhotos(fetchParams).then((data) => {
-      this.state.assets.push(data);
-
-      this.setState({ text:  Object.keys(data).length  });
-
-
-    }, (error) => {
-      console.log('error = ', error);
-    })
+    // this.setState({ showListView: !this.state.showListView})
+  },
+  renderImage: (asset) => {
+    var imageSize = 150;
+    var imageStyle = [styles.image, {width: imageSize, height: imageSize}];
+    return (
+      <Image
+        source={asset.node.image}
+        style={imageStyle}
+      />
+    );
   },
   render: function() {
     return (
-      <TouchableHighlight onPress={this.loadImages}>
-        <View>
-          <Text >finally, a compromise... {this.state.text}</Text>
-            {
-              this.state.assets.map((node, index) => {
-                return (
-                  <Image
-                    key={index}
-                    source={node.image}
-                    style={{width: 100, height: 100}}
-                  />
-                )
-              })
-            }
-        </View>
-      </TouchableHighlight>
+      <View style={styles.PhotosList}>
+        <Button
+          style={styles.Button}
+          styleDisabled={{color: 'red'}}
+          onPress={() => this.handlePress()}>
+          Analyze Photos
+        </Button>
+        {this.state.showListView === true ? <PhotosList /> : null}
+      </View>
     )
   }
 })
 
-// const AddPhotos = (props) => {
-//   return (
-//     <Link to={'/addphotos'}>
-//       <View>
-//         <Text>
-//           finally, a compromise...</Text>
-//           {[1,2,3,4].map((value, index) => {
-//             return (
-//               <View key={index}>
-//                 <Text key={index} onClick={this.onClick}>{'The value is: ' + value}</Text>
-//               </View>
-//             )
-//           })}
-//       </View>
-//     </Link>
-//   )
-// }
+
+          // <CameraRollView
+          //   ref={(ref) => { this._cameraRollView = ref; }}
+          //   batchSize={20}
+          //   groupTypes={this.state.groupTypes}
+          //   renderImage={this.renderImage}
+          // />
 
 module.exports = AddPhotos;
 
-// export class AddPhotos extends React.Component {
-//   render() {
-//     return (
-//       <Link to={'/addphotos'}>
-//         <View>
-//           <Text>hiaksdfj</Text>
-//         </View>
-//       </Link>
-//     )
-//   }
-// }
-
-
-// class AddPhotos extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       assets: []
-//     }
-//   }
-//   render() {
-//     return (
-//       <Link to={'/addphotos'} style={styles.detailCard}>
-
-//       </Link>
-//     )
-//   }
-// }
-
-          //{
-          /*
-              this.state.assets.map((node, index) => {
-                return (
-                  <View>
-                    <Image
-                      source={node.image}
-                      style={imageStyle}
-                    />
-                    <View style={styles.info}>
-                      <Text style={styles.url}>{asset.node.image.uri}</Text>
-                      <Text>{locationStr}</Text>
-                      <Text>{asset.node.group_name}</Text>
-                      <Text>{new Date(asset.node.timestamp).toString()}</Text>
-                    </View>
-                  </View>
-                )
-              })
-          //*///}
-// class AddPhotos extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       text: "this is the default text"
-//     }
-//     // this.setState({text: "This is the defaul text"});
-//   }
-//   componentDidMount() {
-//     const fetchParams = {
-//         first: 25
-//     };
-//     var images = CameraRoll.getPhotos(fetchParams);
-//     // CameraRoll.getPhotos(fetchParams, this.storeImages, this.logImageError);
-//     // CameraRoll.getPhotos(.then());
-//     // CameraRoll.getPhotos({first: 5}).done(
-//     //   (data) =>{
-//     //     console.log(data);
-//     //     this.setState({
-//     //       photoSource: {uri: data.edges[3].node.image.uri}
-//     //     })
-//     //   },
-//     //   (error) => {
-//     //     console.warn(error);
-//     //   }
-//     // );
-//     CameraRoll.getPhotos().then((data) => {
-//       this.setState({ text: "the data works"});
-//     }, (error) => {
-//       console.log('error = ', error);
-//     })
-//   }
-//   storeImages(data) {
-//     console.log('setting images')
-//     const assets = data.edges;
-//     const images = assets.map( asset => asset.node.image );
-//     this.setState({
-//         images: images
-//     });
-//   }
-//   logImageError(err) {
-//     console.log(err);
-//   }
-//   render() {
-//     return (
-//       <View>
-//         <Text>{this.state.text}</Text>
-//       </View>
-//     )
-//   }
-// }
-
-
 
 const styles = StyleSheet.create({
+  Button: {
+    fontSize: 20,
+    color: 'green'
+  },
   row: {
     flexDirection: 'row',
     flex: 1,
@@ -210,6 +110,21 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
+  },
+  PhotosList: {
+    borderBottomColor: 'orange',
+    //when setting this width for android see http://stackoverflow.com/questions/33297367/100-width-in-react-native-flexbox and use Dimensions.get('window').scale to help
+    width: Dimensions.get('window').width,
+    flex: 1,
+    borderWidth: 2
+  },
+  CameraRollView: {
+    width: 200,
+    height: 800,
+    margin: 20,
+    width: 200,
+    borderWidth: 2,
+    borderBottomColor: 'orange'
   }
 });
 

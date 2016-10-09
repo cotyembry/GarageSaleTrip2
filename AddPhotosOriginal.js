@@ -3,7 +3,7 @@
  *    Date Created:    10-07-2016
  *   Last Modified:    10-07-2016
  *
- * @providesModule AddPhotos
+ *
  */
 
 import React from 'react';
